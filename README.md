@@ -4,8 +4,6 @@ Editor visuale per file JSON complessi, ottimizzato per le configurazioni Columb
 
 ![Screenshot](docs/screenshot.png)
 
-> Sostituisci `docs/screenshot.png` con uno screenshot reale dell'app prima di pubblicare.
-
 ---
 
 ## Scarica e usa (utenti)
