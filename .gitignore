@@ -1,0 +1,35 @@
+node_modules/
+dist/
+release/
+
+# IDE / editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Python venv (residual)
+.venv/
+.jbeval/
+
+# Claude Code local state
+.claude/
+
+# Build artifacts
+*.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+*.local
+.env
+.env.*
+
+# macOS icon (platform-specific, generate from icon.png if needed)
+public/icon.icns
+
+# Logs
+*.log
+npm-debug.log*

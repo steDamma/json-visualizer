@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON Visualizer</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>{}</text></svg>" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- Toolbar -->
+      <header id="toolbar">
+        <div class="toolbar-left">
+          <span class="logo">{} JSON Visualizer</span>
+          <button id="btn-open" class="btn btn-primary" title="Apri file JSON (Ctrl+O)">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+              <path d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9z"/>
+            </svg>
+            Apri
+          </button>
+          <button id="btn-save" class="btn" title="Salva JSON (Ctrl+S)" disabled>
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+              <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"/>
+            </svg>
+            Salva
+          </button>
+          <button id="btn-format" class="btn" title="Formatta JSON (Ctrl+Shift+F)" disabled>
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
+              <path d="M2.5 1h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1 0-1zm3 0h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1 0-1zm3 0h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1 0-1zM1 3.5A1.5 1.5 0 0 1 2.5 2h11A1.5 1.5 0 0 1 15 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9z"/>
+            </svg>
+            Formatta
+          </button>
+          <span id="filename-display" class="filename"></span>
+          <span id="dirty-indicator" class="dirty-indicator hidden">●</span>
+        </div>
+        <div class="toolbar-right">
+          <div class="search-box">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor" class="search-icon">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+            </svg>
+            <input type="text" id="search-input" placeholder="Cerca nel JSON..." />
+          </div>
+          <button id="btn-expand-all" class="btn btn-icon" title="Espandi tutto">⊞</button>
+          <button id="btn-collapse-all" class="btn btn-icon" title="Comprimi tutto">⊟</button>
+        </div>
+      </header>
+
+      <!-- Main layout -->
+      <main id="main-layout">
+        <!-- Left: JSON Editor -->
+        <div id="editor-pane">
+          <div id="editor-container">
+            <div id="drop-overlay" class="hidden">
+              <div class="drop-message">
+                <span class="drop-icon">⬇</span>
+                <p>Rilascia il file JSON qui</p>
+              </div>
+            </div>
+
+            <!-- Paste screen: shown by default, hidden once JSON is loaded -->
+            <div id="paste-screen">
+              <div class="paste-content">
+                <div class="paste-header">
+                  <span class="paste-logo">{}</span>
+                  <h2>JSON Visualizer</h2>
+                  <p class="paste-subtitle">Incolla il JSON direttamente oppure apri un file</p>
+                </div>
+                <textarea
+                  id="paste-textarea"
+                  spellcheck="false"
+                  placeholder='{&#10;  "incolla": "il tuo JSON qui",&#10;  "oppure": "apri un file dalla toolbar"&#10;}'
+                ></textarea>
+                <div class="paste-actions">
+                  <button id="btn-load-paste" class="btn btn-primary">Carica JSON</button>
+                  <span class="paste-or">oppure</span>
+                  <button id="btn-open-from-paste" class="btn">
+                    <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor">
+                      <path d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9z"/>
+                    </svg>
+                    Apri file…
+                  </button>
+                </div>
+                <p id="paste-error" class="paste-error hidden">JSON non valido — controlla la sintassi e riprova</p>
+                <p class="paste-hint">Trascina un file .json sulla finestra • Ctrl+Enter per caricare</p>
+              </div>
+            </div>
+
+            <div id="cm-editor"></div>
+          </div>
+        </div>
+
+        <!-- Horizontal Divider -->
+        <div id="h-divider" class="divider divider-h" title="Trascina per ridimensionare"></div>
+
+        <!-- Right: Tree + Properties -->
+        <div id="right-pane">
+          <!-- Tree View -->
+          <div id="tree-pane">
+            <div id="tree-container">
+              <div id="tree-content">
+                <div id="tree-empty" class="pane-empty">
+                  <div class="empty-icon">{}</div>
+                  <p>Nessun file caricato</p>
+                  <p class="empty-hint">Apri un file JSON o trascinalo qui</p>
+                </div>
+                <div id="tree-nodes" class="hidden"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vertical Divider -->
+          <div id="v-divider" class="divider divider-v" title="Trascina per ridimensionare"></div>
+
+          <!-- Properties Panel -->
+          <div id="properties-pane">
+            <div id="properties-container">
+              <div id="properties-empty" class="pane-empty">
+                <p>Seleziona un nodo nell'albero</p>
+              </div>
+              <div id="properties-content" class="hidden"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Context Menu -->
+      <div id="context-menu" class="context-menu hidden">
+        <button class="ctx-item" data-action="copy-path">
+          <span>Copia percorso</span>
+          <kbd>Ctrl+C</kbd>
+        </button>
+        <button class="ctx-item" data-action="copy-value">
+          <span>Copia valore</span>
+        </button>
+        <div class="ctx-separator"></div>
+        <button class="ctx-item ctx-danger" data-action="delete-node">
+          <span>Elimina nodo</span>
+          <kbd>Del</kbd>
+        </button>
+      </div>
+
+      <!-- Toast notifications -->
+      <div id="toast-container"></div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

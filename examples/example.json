@@ -1,0 +1,306 @@
+{
+  "Watchdog": {
+    "job": {
+      "job_info": {
+        "last_status_params": {
+          "metric_profile": "it"
+        },
+        "exclude_time_series": {},
+        "service_scope_filter": {
+          "uuid_customer": [
+            "11111111-1111-1111-1111-111111111111",
+            "22222222-2222-2222-2222-222222222222"
+          ]
+        },
+        "filter_after_last_status": {
+          "customer_code": [
+            "DEMO",
+            "AcmeCorp"
+          ]
+        }
+      },
+      "keep_alive_model": {
+        "trigger_window": 24
+      },
+      "missing_health_model": {
+        "trigger_window": 12
+      },
+      "negative_values_model": {
+        "run": true,
+        "trigger_window": 12,
+        "analysis_window_hours": 168,
+        "negative_points_threshold": 20
+      }
+    },
+    "columbus": {
+      "all": [
+        {
+          "type": "SV_S2S",
+          "create_empty": true,
+          "virtual_attr": {
+            "name": "vs.watchdog.keepalive"
+          },
+          "last_status_filter": {
+            "value": {
+              "like": true,
+              "service_profile": "service.status.keepalive"
+            },
+            "endpoint": "service"
+          },
+          "uuid_dispatchers_create": [
+            "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa1"
+          ]
+        },
+        {
+          "type": "SV_S2S",
+          "create_empty": true,
+          "virtual_attr": {
+            "name": "vs.watchdog.missing_health_index"
+          },
+          "last_status_filter": {
+            "value": {
+              "like": true,
+              "service_profile": "service.status.health_index"
+            },
+            "endpoint": "service"
+          },
+          "uuid_dispatchers_create": [
+            "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa2"
+          ]
+        },
+        {
+          "type": "SV_S2S",
+          "create_empty": true,
+          "virtual_attr": {
+            "name": "vs.watchdog.negative_values"
+          },
+          "last_status_filter": {
+            "value": {
+              "like": true,
+              "service_profile": "service.status.negative_health_index"
+            },
+            "endpoint": "service"
+          },
+          "uuid_dispatchers_create": [
+            "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa3",
+            "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa4"
+          ]
+        }
+      ],
+      "22222222-2222-2222-2222-222222222222": [
+        {
+          "type": "SV_S2S",
+          "create_empty": true,
+          "virtual_attr": {
+            "name": "vs.watchdog.keepalive_silent"
+          },
+          "last_status_filter": {
+            "value": {
+              "like": true,
+              "service_profile": "service.status.keepalive"
+            },
+            "endpoint": "service"
+          },
+          "uuid_dispatchers_delete": [
+            "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa1"
+          ]
+        }
+      ],
+      "11111111-1111-1111-1111-111111111111": [
+        {
+          "type": "SV_S2S",
+          "create_empty": true,
+          "virtual_attr": {
+            "name": "vs.watchdog.keepalive_silent"
+          },
+          "last_status_filter": {
+            "value": {
+              "like": true,
+              "service_profile": "service.status.keepalive"
+            },
+            "endpoint": "service"
+          },
+          "uuid_dispatchers_delete": [
+            "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa1"
+          ]
+        }
+      ]
+    }
+  },
+  "MG-serie-lente": {
+    "job": {
+      "model": {
+        "margin": 0.05,
+        "threshold": 0.75,
+        "min_ser_pts": 20,
+        "regressor_type": "XGBOOST"
+      },
+      "features": {
+        "max_lags": 7,
+        "min_lags": 5
+      },
+      "job_info": {
+        "interval": 180,
+        "customer_code": "ACMECORP",
+        "service_scope_filter": {
+          "uuid_customer": [
+            "11111111-1111-1111-1111-111111111111",
+            "22222222-2222-2222-2222-222222222222"
+          ]
+        },
+        "default_uuid_customer": "22222222-2222-2222-2222-222222222222",
+        "filter_after_last_status": {
+          "customer_code": [
+            "DEMO",
+            "AcmeCorp"
+          ]
+        }
+      },
+      "raw_data": {
+        "resample_data_freq": "30min"
+      }
+    },
+    "columbus": {
+      "all": [
+        {
+          "type": "SV_S2S",
+          "create_empty": true,
+          "virtual_attr": {
+            "name": "vs.series.slow"
+          },
+          "last_status_filter": {
+            "value": {
+              "like": true,
+              "service_profile": "service.forecasting.long_term.prediction"
+            },
+            "endpoint": "service"
+          },
+          "uuid_dispatchers_create": [
+            "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb1",
+            "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb2",
+            "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb3"
+          ],
+          "uuid_dispatchers_delete": [
+            "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb4"
+          ]
+        }
+      ],
+      "22222222-2222-2222-2222-222222222222": [
+        {
+          "type": "SV_S2S",
+          "create_empty": true,
+          "virtual_attr": {
+            "name": "vs.series.silent_slow"
+          },
+          "last_status_filter": {
+            "value": {
+              "like": true,
+              "service_profile": "service.forecasting.long_term.prediction"
+            },
+            "endpoint": "service"
+          },
+          "uuid_dispatchers_delete": [
+            "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb1",
+            "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb2",
+            "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb3"
+          ]
+        }
+      ]
+    }
+  },
+  "MG-serie-veloci": {
+    "job": {
+      "job_info": {
+        "page_size": 10,
+        "batch_size": 100,
+        "last_status_params": {
+          "metric_profile": "it.value.valutazione"
+        },
+        "default_uuid_customer": "22222222-2222-2222-2222-222222222222"
+      },
+      "raw_data": {
+        "resample_data_freq": null
+      },
+      "forecasting_model": {
+        "ema_alpha": 0.3,
+        "threshold": 0.5,
+        "window_size": "6h",
+        "lambda_decay": 0.1
+      },
+      "proactivity_model": {
+        "threshold": 0.75,
+        "detection_method": "mean_last_1h"
+      }
+    },
+    "columbus": {
+      "all": [
+        {
+          "type": "SV_S2S",
+          "create_empty": true,
+          "virtual_attr": {
+            "name": "vs.series.fast.6h"
+          },
+          "last_status_filter": {
+            "value": {
+              "like": true,
+              "service_profile": "service.forecasting.fast_series.6h"
+            },
+            "endpoint": "service"
+          },
+          "uuid_dispatchers_create": [
+            "cccccccc-cccc-cccc-cccc-ccccccccccc1",
+            "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb2",
+            "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb3"
+          ],
+          "uuid_dispatchers_delete": [
+            "cccccccc-cccc-cccc-cccc-ccccccccccc2"
+          ]
+        },
+        {
+          "type": "SV_S2S",
+          "create_empty": true,
+          "virtual_attr": {
+            "name": "vs.series.proactivity"
+          },
+          "last_status_filter": {
+            "value": {
+              "like": true,
+              "service_profile": "service.proactivity.fast_series"
+            },
+            "endpoint": "service"
+          },
+          "uuid_dispatchers_create": [
+            "cccccccc-cccc-cccc-cccc-ccccccccccc3",
+            "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb2",
+            "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb3"
+          ],
+          "uuid_dispatchers_delete": [
+            "cccccccc-cccc-cccc-cccc-ccccccccccc4"
+          ]
+        }
+      ],
+      "22222222-2222-2222-2222-222222222222": [
+        {
+          "type": "SV_S2S",
+          "create_empty": true,
+          "virtual_attr": {
+            "name": "vs.series.silent_fast.6h"
+          },
+          "last_status_filter": {
+            "value": {
+              "like": true,
+              "service_profile": "service.forecasting.fast_series.6h"
+            },
+            "endpoint": "service"
+          },
+          "uuid_dispatchers_delete": [
+            "cccccccc-cccc-cccc-cccc-ccccccccccc1",
+            "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb2",
+            "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb3",
+            "cccccccc-cccc-cccc-cccc-ccccccccccc3"
+          ]
+        }
+      ]
+    }
+  }
+}
