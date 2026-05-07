@@ -59,7 +59,9 @@
     },
     "files": [
       "dist/**/*",
-      "electron/**/*"
+      "electron/**/*",
+      "public/icon.ico",
+      "public/icon.png"
     ],
     "win": {
       "target": [

@@ -24,6 +24,7 @@ function createWindow() {
       // No preload needed — the app uses only web APIs
     },
     title: 'JSON Visualizer',
+    icon: path.join(__dirname, '../public/icon.ico'),
     show: false, // Avoid white flash on startup
     backgroundColor: '#0d1117',
   });
